@@ -1,0 +1,33 @@
+﻿@model List<MatchmakingHelper.Models.Company>
+@{
+    ViewBag.Title = "Company Index";
+}
+
+<h2>Company Index</h2>
+<form method="post" action="@Url.Action("Index", "Company")">
+    <input type="text" name="companyName" placeholder="Enter company name..." />
+    <input type="number" name="numberOfTables" value="1" />
+    <button>Enter Company</button>
+
+</form>
+
+<h2>Companies in the Database</h2>
+<table>
+    <tr>
+        <th>Company Name</th>
+        <th>Number of Tables</th>
+    </tr>
+    @foreach (var company in Model)
+    {
+
+        <tr>
+            <td>@company.Name</td>
+            <td>@company.NumberOfTables</td>
+        </tr>
+    }
+</table>
+
+
+
+
+
