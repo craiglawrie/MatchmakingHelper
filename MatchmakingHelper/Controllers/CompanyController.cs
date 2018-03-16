@@ -28,7 +28,7 @@ namespace MatchmakingHelper.Controllers
         [HttpPost]
         public ActionResult Index(string companyName, int numberOfTables)
         {
-
+            companyDAL.AddCompanyToDB(companyName, numberOfTables);
             return RedirectToAction("Index");
         }
     }
