@@ -16,3 +16,35 @@ textarea {
     max-width: 280px;
 }
 
+td, th {
+    padding: 0 3rem;
+}
+
+.student-table span {
+    display: inline-block;
+    width: 15rem;
+}
+
+    .student-table span.wide-column {
+        width: 25rem;
+    }
+
+.table-titles {
+    font-weight: bold;
+    margin-top: 2rem;
+}
+
+.multi-form {
+    display: inline-block;
+    white-space: nowrap;
+    margin: 0 1rem;
+}
+
+    .multi-form select.form-control {
+        width: 20rem;
+    }
+
+        .multi-form select.form-control option {
+            font-size: 1.5rem;
+            padding: 1rem;
+        }

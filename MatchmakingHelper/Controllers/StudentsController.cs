@@ -28,13 +28,23 @@ namespace MatchmakingHelper.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string studentName)
+        public ActionResult AddStudent(string studentName, string studentEmail)
         {
             List<Student> students = studentDAL.GetAllStudents();
             if (!students.Select(s => s.Name).Contains(studentName))
             {
-                studentDAL.AddStudentToDB(studentName);
+                Student student = new Student();
+                student.Name = studentName;
+                student.Email = studentEmail;
+                studentDAL.AddStudentToDB(student);
             }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveStudent(string id)
+        {
+            studentDAL.RemoveStudentFromDBById(id);
             return RedirectToAction("Index");
         }
 
@@ -47,6 +57,28 @@ namespace MatchmakingHelper.Controllers
             spv.Student.Preferences = preferencesDAL.GetPreferredCompaniesByStudentId(id);
 
             return View("Preferences", spv);
+        }
+
+        [HttpPost]
+        public ActionResult AddPreference(string studentId, int companyId)
+        {
+            // May not be needed based on view removing repeats from the options.
+            //List<Company> preferences = preferencesDAL.GetPreferredCompaniesByStudentId(studentId);
+            //if (!preferences.Select(p => p.Id).Contains(companyId))
+            //{
+            //    preferencesDAL.AddCompanyPreference(studentId, companyId, 1);
+            //}
+
+            preferencesDAL.AddCompanyPreference(studentId, companyId, 1);
+
+            return RedirectToAction("Preferences", new { id = studentId });
+        }
+
+        [HttpPost]
+        public ActionResult RemovePreference(string studentId, int companyId)
+        {
+            preferencesDAL.RemoveCompanyPreference(studentId, companyId);
+            return RedirectToAction("Preferences", new { id = studentId });
         }
     }
 }

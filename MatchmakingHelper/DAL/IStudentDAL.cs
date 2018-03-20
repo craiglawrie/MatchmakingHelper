@@ -10,7 +10,8 @@ namespace MatchmakingHelper.DAL
     public interface IStudentDAL
     {
         List<Student> GetAllStudents();
-        bool AddStudentToDB(string studentName);
         Student GetStudentById(string id);
+        bool AddStudentToDB(Student student);
+        bool RemoveStudentFromDBById(string id);
     }
 }

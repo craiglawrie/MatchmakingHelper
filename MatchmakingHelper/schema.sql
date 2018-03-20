@@ -14,7 +14,8 @@ DROP TABLE company;
 -- Create Tables
 CREATE TABLE student (
 	id varchar(30) NOT NULL,
-	name varchar(50) NOT NULL
+	name varchar(50) NOT NULL,
+	email varchar(50) NOT NULL,
 
 	CONSTRAINT pk_student PRIMARY KEY (id)
 );

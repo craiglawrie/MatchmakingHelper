@@ -33,7 +33,8 @@ namespace MatchmakingHelper.DAL
                         Student student = new Student()
                         {
                             Id = Convert.ToString(reader["id"]),
-                            Name = Convert.ToString(reader["name"])
+                            Name = Convert.ToString(reader["name"]),
+                            Email = Convert.ToString(reader["email"])
                         };
 
                         students.Add(student);
@@ -49,7 +50,7 @@ namespace MatchmakingHelper.DAL
             return students;
         }
 
-        public bool AddStudentToDB(string studentName)
+        public bool AddStudentToDB(Student student)
         {
             bool result = false;
 
@@ -58,9 +59,10 @@ namespace MatchmakingHelper.DAL
                 using(SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO student (id, name) VALUES (@id, @name)", conn);
-                    cmd.Parameters.AddWithValue("@id", studentName.GetHashCode().ToString());
-                    cmd.Parameters.AddWithValue("@name", studentName);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO student (id, name, email) VALUES (@id, @name, @email)", conn);
+                    cmd.Parameters.AddWithValue("@id", student.Name.GetHashCode().ToString());
+                    cmd.Parameters.AddWithValue("@name", student.Name);
+                    cmd.Parameters.AddWithValue("@email", student.Email);
 
                     result = cmd.ExecuteNonQuery() == 1;
                 }
@@ -91,6 +93,7 @@ namespace MatchmakingHelper.DAL
                     {
                         student.Id = Convert.ToString(reader["id"]);
                         student.Name = Convert.ToString(reader["name"]);
+                        student.Email = Convert.ToString(reader["email"]);
                     }
                 }
             }
@@ -101,6 +104,30 @@ namespace MatchmakingHelper.DAL
             }
 
             return student;
+        }
+
+        public bool RemoveStudentFromDBById(string id)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM student WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
         }
 
         string SqlQueryStringStudentPref = "SELECT " +

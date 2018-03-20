@@ -10,5 +10,7 @@ namespace MatchmakingHelper.DAL
     public interface IPreferencesDAL
     {
         List<Company> GetPreferredCompaniesByStudentId(string id);
+        bool AddCompanyPreference(string studentId, int companyId, int preferenceRank);
+        bool RemoveCompanyPreference(string studentId, int companyId);
     }
 }

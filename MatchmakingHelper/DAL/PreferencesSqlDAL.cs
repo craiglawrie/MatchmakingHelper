@@ -25,7 +25,12 @@ namespace MatchmakingHelper.DAL
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM student_company_preferences WHERE student_id = @id", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT " +
+                                                    "   c.id as companyId, " +
+                                                    "   c.name as companyName " +
+                                                    "FROM student_company_preferences scp " +
+                                                    "JOIN company c ON c.id = scp.company_id " +
+                                                    "WHERE scp.student_id = @id;", conn);
                     cmd.Parameters.AddWithValue("@id", id);
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -34,8 +39,8 @@ namespace MatchmakingHelper.DAL
                     {
                         Company company = new Company()
                         {
-                            Id = Convert.ToInt32(reader["id"]),
-                            Name = Convert.ToString(reader["name"])
+                            Id = Convert.ToInt32(reader["companyId"]),
+                            Name = Convert.ToString(reader["companyName"])
                         };
 
                         companies.Add(company);
@@ -49,6 +54,57 @@ namespace MatchmakingHelper.DAL
             }
 
             return companies;
+        }
+
+        public bool AddCompanyPreference(string studentId, int companyId, int preferenceRank)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("INSERT INTO student_company_preferences (student_id, company_id, preference_rank) VALUES (@studentId, @companyId, @preferenceRank)", conn);
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+                    cmd.Parameters.AddWithValue("@companyId", companyId);
+                    cmd.Parameters.AddWithValue("@preferenceRank", preferenceRank);
+
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
+        }
+
+        public bool RemoveCompanyPreference(string studentId, int companyId)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM student_company_preferences WHERE student_id = @studentId AND company_id = @companyId", conn);
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+                    cmd.Parameters.AddWithValue("@companyId", companyId);
+
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
         }
     }
 }
