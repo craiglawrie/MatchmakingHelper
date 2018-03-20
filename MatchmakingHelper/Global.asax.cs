@@ -32,6 +32,7 @@ namespace MatchmakingHelper
             // Map Interfaces to Classes
             kernel.Bind<IStudentDAL>().To<StudentSqlDAL>().WithConstructorArgument("connectionString", connectionString);
             kernel.Bind<ICompanyDAL>().To<CompanySqlDAL>().WithConstructorArgument("connectionString", connectionString);
+            kernel.Bind<IPreferencesDAL>().To<PreferencesSqlDAL>().WithConstructorArgument("connectionString", connectionString);
 
             return kernel;
         }

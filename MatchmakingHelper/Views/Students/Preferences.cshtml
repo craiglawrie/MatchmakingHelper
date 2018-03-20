@@ -1,0 +1,23 @@
+﻿@model MatchmakingHelper.Models.StudentPrefViewModel
+@{
+    ViewBag.Title = "Preferences";
+}
+
+<h2>Preferences</h2>
+
+@foreach(var company in Model.AllCompanies)
+{
+    <p>
+        @company.Name
+    </p>
+}
+
+@foreach (var company in Model.Student.Preferences)
+{
+    <p>
+        @company.Name
+    </p>
+}
+
+<p>@Model.Student.Id</p>
+<p>@Model.Student.Name</p>

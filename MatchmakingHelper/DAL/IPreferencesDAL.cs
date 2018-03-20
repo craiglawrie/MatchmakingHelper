@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace MatchmakingHelper.DAL
 {
-    public interface IStudentDAL
+    public interface IPreferencesDAL
     {
-        List<Student> GetAllStudents();
-        bool AddStudentToDB(string studentName);
-        Student GetStudentById(string id);
+        List<Company> GetPreferredCompaniesByStudentId(string id);
     }
 }

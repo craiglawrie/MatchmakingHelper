@@ -32,7 +32,7 @@ namespace MatchmakingHelper.DAL
                     {
                         Student student = new Student()
                         {
-                            Id = Convert.ToInt32(reader["id"]),
+                            Id = Convert.ToString(reader["id"]),
                             Name = Convert.ToString(reader["name"])
                         };
 
@@ -58,7 +58,8 @@ namespace MatchmakingHelper.DAL
                 using(SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO student (name) VALUES (@name)", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO student (id, name) VALUES (@id, @name)", conn);
+                    cmd.Parameters.AddWithValue("@id", studentName.GetHashCode().ToString());
                     cmd.Parameters.AddWithValue("@name", studentName);
 
                     result = cmd.ExecuteNonQuery() == 1;
@@ -71,6 +72,35 @@ namespace MatchmakingHelper.DAL
             }
 
             return result;
+        }
+
+        public Student GetStudentById(string id)
+        {
+            Student student = new Student();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM student WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        student.Id = Convert.ToString(reader["id"]);
+                        student.Name = Convert.ToString(reader["name"]);
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return student;
         }
 
         string SqlQueryStringStudentPref = "SELECT " +

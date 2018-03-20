@@ -12,9 +12,18 @@
 </div>
 
 <h2>Students in the Database</h2>
-@foreach (var student in Model)
-{
-    <p>
-        <span>@student.Name</span>
-    </p>
-}
+<table>
+    <tr>
+        <th>Student Name</th>
+        <th>Student Email</th>
+        <th>Link To Preferences</th>
+    </tr>
+    @foreach (var student in Model)
+    {
+        <tr>
+            <td>@student.Name</td>
+            <td></td>
+            <td><a href="@Url.Action("Preferences", "Students", new { id = @student.Id })" target="_blank">@Url.Action("Preferences", "Students", new { id = @student.Id })</a></td>
+        </tr>
+    }
+</table>

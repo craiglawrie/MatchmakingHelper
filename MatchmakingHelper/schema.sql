@@ -13,7 +13,7 @@ DROP TABLE company;
 
 -- Create Tables
 CREATE TABLE student (
-	id int identity(1,1) NOT NULL,
+	id varchar(30) NOT NULL,
 	name varchar(50) NOT NULL
 
 	CONSTRAINT pk_student PRIMARY KEY (id)
@@ -28,7 +28,7 @@ CREATE TABLE company (
 );
 
 CREATE TABLE student_company_preferences (
-	student_id int NOT NULL,
+	student_id varchar(30) NOT NULL,
 	company_id int NOT NULL,
 	preference_rank int NOT NULL,
 

@@ -11,10 +11,14 @@ namespace MatchmakingHelper.Controllers
     public class StudentsController : Controller
     {
         IStudentDAL studentDAL;
+        ICompanyDAL companyDAL;
+        IPreferencesDAL preferencesDAL;
 
-        public StudentsController(IStudentDAL studentDAL)
+        public StudentsController(IStudentDAL studentDAL, ICompanyDAL companyDAL, IPreferencesDAL preferencesDAL)
         {
             this.studentDAL = studentDAL;
+            this.companyDAL = companyDAL;
+            this.preferencesDAL = preferencesDAL;
         }
 
         public ActionResult Index()
@@ -34,6 +38,15 @@ namespace MatchmakingHelper.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        public ActionResult Preferences(string id)
+        {
+            StudentPrefViewModel spv = new StudentPrefViewModel();
+
+            spv.Student = studentDAL.GetStudentById(id);
+            spv.AllCompanies = companyDAL.GetAllCompanies();
+            spv.Student.Preferences = preferencesDAL.GetPreferredCompaniesByStudentId(id);
+
+            return View("Preferences", spv);
+        }
     }
 }
