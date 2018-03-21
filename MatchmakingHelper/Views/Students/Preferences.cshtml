@@ -22,8 +22,8 @@
         </form>
     </div>
     <div class="multi-form">
-        <form class="form-inline" method="post" action="@Url.Action("RemovePreference","Students")">
-            <button class="btn">&#x21E6;</button>
+        <form class="form-inline" method="post" action="@Url.Action("ActOnPreferredCompanies","Students")">
+            <button class="btn" name="buttonPressed" value="removePreference">&#x21E6;</button>
             <select class="form-control" name="companyId" size="@Model.AllCompanies.Count" required>
                 @foreach (var company in Model.Student.Preferences)
                 {
@@ -31,6 +31,10 @@
                 }
             </select>
             <input type="hidden" name="studentId" value="@Model.Student.Id" />
+            <div class="form-group">
+                <button class="btn btn-block" name="buttonPressed" value="increasePreference">&nbsp; &#x21E7; &nbsp;</button>
+                <button class="btn btn-block" name="buttonPressed" value="decreasePreference">&nbsp; &#x21E9; &nbsp;</button>
+            </div>
         </form>
     </div>
 </div>

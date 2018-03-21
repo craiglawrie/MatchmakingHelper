@@ -73,9 +73,45 @@ namespace MatchmakingHelper.Controllers
         }
 
         [HttpPost]
-        public ActionResult RemovePreference(string studentId, int companyId)
+        public ActionResult ActOnPreferredCompanies(string studentId, int companyId, string buttonPressed)
         {
-            preferencesDAL.RemoveCompanyPreference(studentId, companyId);
+            if (buttonPressed == "removePreference")
+            {
+                preferencesDAL.RemoveCompanyPreference(studentId, companyId);
+            }
+            else
+            {
+                List<Company> preferences = preferencesDAL.GetPreferredCompaniesByStudentId(studentId);
+                if (buttonPressed == "increasePreference")
+                {
+                    Company source;
+                    Company target;
+                    for (int i = 1; i < preferences.Count; i++)
+                    {
+                        if (preferences[i].Id == companyId)
+                        {
+                            source = preferences[i];
+                            target = preferences[i - 1];
+                            preferencesDAL.ExchangeRanksBetween(source, target, studentId);
+                        }
+                    }
+                }
+                else if (buttonPressed == "decreasePreference")
+                {
+                    Company source;
+                    Company target;
+                    for (int i = 0; i < preferences.Count - 1; i++)
+                    {
+                        if (preferences[i].Id == companyId)
+                        {
+                            source = preferences[i];
+                            target = preferences[i + 1];
+                            preferencesDAL.ExchangeRanksBetween(source, target, studentId);
+                        }
+                    }
+                }
+            }
+
             return RedirectToAction("Preferences", new { id = studentId });
         }
     }

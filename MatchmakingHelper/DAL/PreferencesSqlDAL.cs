@@ -143,5 +143,63 @@ namespace MatchmakingHelper.DAL
                 throw;
             }
         }
+
+        public bool ExchangeRanksBetween(Company source, Company target, string studentId)
+        {
+            bool result = false;
+
+            int sourceRank = GetCompanyRankByStudentId(studentId, source);
+            int targetRank = GetCompanyRankByStudentId(studentId, target);
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE student_company_preferences " +
+                                                    "SET preference_rank = @preferenceRank " +
+                                                    "WHERE " +
+                                                    "   student_id = @studentId AND " +
+                                                    "   company_id = @companyId", conn);
+
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+                    cmd.Parameters.AddWithValue("@companyId", target.Id);
+                    cmd.Parameters.AddWithValue("@preferenceRank", sourceRank);
+
+                    cmd.ExecuteNonQuery();
+
+                    cmd.Parameters.Clear();
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+                    cmd.Parameters.AddWithValue("@companyId", source.Id);
+                    cmd.Parameters.AddWithValue("@preferenceRank", targetRank);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
+        }
+
+        private int GetCompanyRankByStudentId(string studentId, Company company)
+        {
+            int result = 0;
+
+            List<Company> preferences = GetPreferredCompaniesByStudentId(studentId);
+            for (int i = 0; i < preferences.Count; i++)
+            {
+                if (preferences[i].Id == company.Id)
+                {
+                    result = i + 1;
+                }
+            }
+
+            return result;
+        }
     }
 }

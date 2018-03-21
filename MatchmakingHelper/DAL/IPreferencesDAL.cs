@@ -12,5 +12,6 @@ namespace MatchmakingHelper.DAL
         List<Company> GetPreferredCompaniesByStudentId(string id);
         bool AddCompanyPreference(string studentId, int companyId, int preferenceRank);
         bool RemoveCompanyPreference(string studentId, int companyId);
+        bool ExchangeRanksBetween(Company source, Company target, string studentId);
     }
 }
