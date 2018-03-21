@@ -30,7 +30,8 @@ namespace MatchmakingHelper.DAL
                                                     "   c.name as companyName " +
                                                     "FROM student_company_preferences scp " +
                                                     "JOIN company c ON c.id = scp.company_id " +
-                                                    "WHERE scp.student_id = @id;", conn);
+                                                    "WHERE scp.student_id = @id " +
+                                                    "ORDER BY scp.preference_rank;", conn);
                     cmd.Parameters.AddWithValue("@id", id);
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -104,7 +105,43 @@ namespace MatchmakingHelper.DAL
                 throw;
             }
 
+            RenumberRemainingPreferenceRanks(studentId);
+
             return result;
+        }
+
+        private void RenumberRemainingPreferenceRanks(string studentId)
+        {
+            List<Company> companies = GetPreferredCompaniesByStudentId(studentId);
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("UPDATE student_company_preferences " +
+                                                    "SET preference_rank = @preferenceRank " +
+                                                    "WHERE " +
+                                                    "   student_id = @studentId AND " +
+                                                    "   company_id = @companyId", conn);
+
+                    for (int i = 0; i < companies.Count; i++)
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@studentId", studentId);
+                        cmd.Parameters.AddWithValue("@companyId", companies[i].Id);
+                        cmd.Parameters.AddWithValue("@preferenceRank", i + 1);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }

@@ -62,14 +62,12 @@ namespace MatchmakingHelper.Controllers
         [HttpPost]
         public ActionResult AddPreference(string studentId, int companyId)
         {
-            // May not be needed based on view removing repeats from the options.
-            //List<Company> preferences = preferencesDAL.GetPreferredCompaniesByStudentId(studentId);
-            //if (!preferences.Select(p => p.Id).Contains(companyId))
-            //{
-            //    preferencesDAL.AddCompanyPreference(studentId, companyId, 1);
-            //}
+            List<Company> preferences = preferencesDAL.GetPreferredCompaniesByStudentId(studentId);
+            if (!preferences.Select(p => p.Id).Contains(companyId))
+            {
+                preferencesDAL.AddCompanyPreference(studentId, companyId, preferences.Count + 1);
+            }
 
-            preferencesDAL.AddCompanyPreference(studentId, companyId, 1);
 
             return RedirectToAction("Preferences", new { id = studentId });
         }
