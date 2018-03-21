@@ -12,11 +12,12 @@ namespace MatchmakingHelper.Controllers
     {
 
         ICompanyDAL companyDAL;
+        IPreferencesDAL preferencesDAL;
 
-        public CompanyController(ICompanyDAL companyDAL)
+        public CompanyController(ICompanyDAL companyDAL, IPreferencesDAL preferencesDAL)
         {
             this.companyDAL = companyDAL;
-     
+            this.preferencesDAL = preferencesDAL;
         }
 
         public ActionResult Index()
@@ -26,9 +27,17 @@ namespace MatchmakingHelper.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string companyName, int numberOfTables)
+        public ActionResult AddCompany(string companyName, int numberOfTablesDay1, int numberOfTablesDay2)
         {
-            companyDAL.AddCompanyToDB(companyName, numberOfTables);
+            companyDAL.AddCompanyToDB(companyName, numberOfTablesDay1, numberOfTablesDay2);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult RemoveCompany(int companyId)
+        {
+            preferencesDAL.RemoveAllPreferencesForCompany(companyId);
+            companyDAL.RemoveCompanyFromDBById(companyId);
             return RedirectToAction("Index");
         }
     }

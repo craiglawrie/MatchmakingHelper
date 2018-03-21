@@ -10,6 +10,7 @@ namespace MatchmakingHelper.DAL
     public interface ICompanyDAL
     {
         List<Company> GetAllCompanies();
-        bool AddCompanyToDB(string companyName, int numberOfTables);
+        bool AddCompanyToDB(string companyName, int numberOfTablesDay1, int numberOfTablesDay2);
+        bool RemoveCompanyFromDBById(int companyId);
     }
 }

@@ -23,7 +23,8 @@ CREATE TABLE student (
 CREATE TABLE company (
 	id int identity(1,1) NOT NULL,
 	name varchar(50) NOT NULL,
-	numberoftables int NOT NULL DEFAULT 1,
+	numberoftablesday1 int NOT NULL DEFAULT 0,
+	numberoftablesday2 int NOT NULL DEFAULT 0,
 
 	CONSTRAINT pk_company PRIMARY KEY (id)
 );

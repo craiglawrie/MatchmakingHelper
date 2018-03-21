@@ -13,5 +13,7 @@ namespace MatchmakingHelper.DAL
         bool AddCompanyPreference(string studentId, int companyId, int preferenceRank);
         bool RemoveCompanyPreference(string studentId, int companyId);
         bool ExchangeRanksBetween(Company source, Company target, string studentId);
+        bool RemoveAllPreferencesForCompany(int companyId);
+        bool RemoveAllPreferencesForStudent(string studentId);
     }
 }

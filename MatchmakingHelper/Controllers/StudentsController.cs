@@ -44,6 +44,7 @@ namespace MatchmakingHelper.Controllers
         [HttpPost]
         public ActionResult RemoveStudent(string id)
         {
+            preferencesDAL.RemoveAllPreferencesForStudent(id);
             studentDAL.RemoveStudentFromDBById(id);
             return RedirectToAction("Index");
         }

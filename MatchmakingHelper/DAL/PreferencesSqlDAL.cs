@@ -201,5 +201,93 @@ namespace MatchmakingHelper.DAL
 
             return result;
         }
+
+        public bool RemoveAllPreferencesForCompany(int companyId)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM student_company_preferences WHERE company_id = @companyId", conn);
+                    cmd.Parameters.AddWithValue("@companyId", companyId);
+
+                    result = cmd.ExecuteNonQuery() > 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            RenumberAllPreferenceRanks();
+
+            return result;
+        }
+
+        private void RenumberAllPreferenceRanks()
+        {
+            List<string> studentIds = GetAllStudentIdsWithAnyPreferences();
+
+            foreach(string studentId in studentIds)
+            {
+                RenumberRemainingPreferenceRanks(studentId);
+            }
+        }
+
+        private List<string> GetAllStudentIdsWithAnyPreferences()
+        {
+            List<string> studentIds = new List<string>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("SELECT student_id FROM student_company_preferences GROUP BY student_id", conn);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        studentIds.Add(Convert.ToString(reader["student_id"]));
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return studentIds;
+        }
+
+        public bool RemoveAllPreferencesForStudent(string studentId)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM student_company_preferences WHERE student_id = @studentId", conn);
+                    cmd.Parameters.AddWithValue("@studentId", studentId);
+
+                    result = cmd.ExecuteNonQuery() > 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
+        }
     }
 }

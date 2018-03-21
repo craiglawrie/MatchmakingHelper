@@ -29,6 +29,10 @@ td, th {
         width: 25rem;
     }
 
+    .student-table > div {
+        padding-top: 0.5rem;
+    }
+
 .table-titles {
     font-weight: bold;
     margin-top: 2rem;
@@ -48,3 +52,7 @@ td, th {
             font-size: 1.5rem;
             padding: 1rem;
         }
+
+input.form-control[type=number] {
+    width: 11rem;
+}

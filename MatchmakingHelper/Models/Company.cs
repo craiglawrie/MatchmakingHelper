@@ -9,6 +9,7 @@ namespace MatchmakingHelper.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int NumberOfTables { get; set; }
+        public int NumberOfTablesDay1 { get; set; }
+        public int NumberOfTablesDay2 { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace MatchmakingHelper.DAL
             this.connectionString = connectionString;
         }
 
-        public bool AddCompanyToDB(string companyName, int numberOfTables)
+        public bool AddCompanyToDB(string companyName, int numberOfTablesDay1, int numberOfTablesDay2)
         {
             bool result = false;
             
@@ -25,9 +25,10 @@ namespace MatchmakingHelper.DAL
                 using (SqlConnection conn = new SqlConnection(connectionString)) 
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO company (name, numberoftables) VALUES (@name, @numberoftables)", conn);
+                    SqlCommand cmd = new SqlCommand("INSERT INTO company (name, numberoftablesday1, numberoftablesday2) VALUES (@name, @numberoftablesday1, @numberoftablesday2)", conn);
                     cmd.Parameters.AddWithValue("@name", companyName);
-                    cmd.Parameters.AddWithValue("@numberoftables", numberOfTables);
+                    cmd.Parameters.AddWithValue("@numberoftablesday1", numberOfTablesDay1);
+                    cmd.Parameters.AddWithValue("@numberoftablesday2", numberOfTablesDay2);
 
                     result = cmd.ExecuteNonQuery() == 1;
                 }
@@ -57,7 +58,8 @@ namespace MatchmakingHelper.DAL
                         {
                             Id = Convert.ToInt32(reader["id"]),
                             Name = Convert.ToString(reader["name"]),
-                            NumberOfTables = Convert.ToInt32(reader["numberoftables"])
+                            NumberOfTablesDay1 = Convert.ToInt32(reader["numberoftablesday1"]),
+                            NumberOfTablesDay2 = Convert.ToInt32(reader["numberoftablesday2"])
                         };
 
                         companies.Add(company);
@@ -70,6 +72,30 @@ namespace MatchmakingHelper.DAL
                 throw;
             }
             return companies;
+        }
+
+        public bool RemoveCompanyFromDBById(int companyId)
+        {
+            bool result = false;
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("DELETE FROM company WHERE id = @id", conn);
+                    cmd.Parameters.AddWithValue("@id", companyId);
+
+                    result = cmd.ExecuteNonQuery() == 1;
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
+
+            return result;
         }
     }
 }
