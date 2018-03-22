@@ -50,7 +50,7 @@ namespace MatchmakingHelper.DAL
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM company", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM company ORDER BY name", conn);
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
